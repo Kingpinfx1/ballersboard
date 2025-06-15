@@ -20,6 +20,7 @@ struct ClubSignupView: View {
     @State private var navigateToDashboard = false
     @Environment(\.dismiss) private var dismiss
     
+    
     var body: some View {
         NavigationStack {
             ZStack {
