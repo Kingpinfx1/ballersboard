@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CEC2D09F2DFCE0D4000AEC16 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = CEC2D09E2DFCE0D4000AEC16 /* FirebaseCore */; };
+		CEC2D0A12DFCE0DA000AEC16 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = CEC2D0A02DFCE0DA000AEC16 /* FirebaseDatabase */; };
+		CEC2D0A32DFCE0DE000AEC16 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CEC2D0A22DFCE0DE000AEC16 /* FirebaseAuth */; };
+		CEC2D0C22DFCE3B9000AEC16 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = CEC2D0C12DFCE3B9000AEC16 /* FirebaseStorage */; };
+		CEC2D0C42DFCE47F000AEC16 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CEC2D0C32DFCE47F000AEC16 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		CEC2D0732DFCD425000AEC16 /* ballersboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ballersboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +31,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC2D0A12DFCE0DA000AEC16 /* FirebaseDatabase in Frameworks */,
+				CEC2D0C22DFCE3B9000AEC16 /* FirebaseStorage in Frameworks */,
+				CEC2D0A32DFCE0DE000AEC16 /* FirebaseAuth in Frameworks */,
+				CEC2D0C42DFCE47F000AEC16 /* FirebaseFirestore in Frameworks */,
+				CEC2D09F2DFCE0D4000AEC16 /* FirebaseCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +46,7 @@
 			isa = PBXGroup;
 			children = (
 				CEC2D0752DFCD425000AEC16 /* ballersboard */,
+				CEC2D09D2DFCE0D4000AEC16 /* Frameworks */,
 				CEC2D0742DFCD425000AEC16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +57,13 @@
 				CEC2D0732DFCD425000AEC16 /* ballersboard.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CEC2D09D2DFCE0D4000AEC16 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +86,11 @@
 			);
 			name = ballersboard;
 			packageProductDependencies = (
+				CEC2D09E2DFCE0D4000AEC16 /* FirebaseCore */,
+				CEC2D0A02DFCE0DA000AEC16 /* FirebaseDatabase */,
+				CEC2D0A22DFCE0DE000AEC16 /* FirebaseAuth */,
+				CEC2D0C12DFCE3B9000AEC16 /* FirebaseStorage */,
+				CEC2D0C32DFCE47F000AEC16 /* FirebaseFirestore */,
 			);
 			productName = ballersboard;
 			productReference = CEC2D0732DFCD425000AEC16 /* ballersboard.app */;
@@ -94,6 +120,9 @@
 			);
 			mainGroup = CEC2D06A2DFCD425000AEC16;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CEC2D0742DFCD425000AEC16 /* Products */;
 			projectDirPath = "";
@@ -256,11 +285,13 @@
 				DEVELOPMENT_TEAM = 34Z7ZM6GW4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ballers Board";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -268,9 +299,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ballersboard.ballersboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -284,11 +319,13 @@
 				DEVELOPMENT_TEAM = 34Z7ZM6GW4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Ballers Board";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -296,9 +333,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ballersboard.ballersboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -324,6 +365,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CEC2D09E2DFCE0D4000AEC16 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		CEC2D0A02DFCE0DA000AEC16 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		CEC2D0A22DFCE0DE000AEC16 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CEC2D0C12DFCE3B9000AEC16 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		CEC2D0C32DFCE47F000AEC16 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEC2D09C2DFCDF16000AEC16 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CEC2D06B2DFCD425000AEC16 /* Project object */;
 }

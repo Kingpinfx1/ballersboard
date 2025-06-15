@@ -11,7 +11,9 @@ import SwiftUI
 struct ballersboardApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack{
+                OnboardingView()
+            }
         }
     }
 }
