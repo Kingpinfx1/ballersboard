@@ -7,27 +7,22 @@
 
 
 import Foundation
+import FirebaseFirestore
 
 struct ClubModel: Identifiable, Codable {
-    var id: String?
-    let clubName: String
-    let city: String
-    let address: String
-    let socialLink: String
-    let phoneNumber: String
-    let email: String
-    let password: String
-    let clubLogo: String
-    var ballers: [ClubBaller] = []
-    
-    // Computed property - no Codable needed
-    var topBaller: ClubBaller? {
-        ballers.max(by: { $0.amount < $1.amount })
-    }
+    @DocumentID var id: String?
+    var clubName: String
+    var city: String
+    var address: String
+    var socialLink: String
+    var phoneNumber: String
+    var email: String
+    var clubLogo: String
+    var topBaller: ClubBaller?
 }
 
 struct ClubBaller: Identifiable, Codable {
-    var id: String?
-    let alias: String
-    let amount: Double
+    @DocumentID var id: String?
+    var alias: String
+    var amount: Double
 }

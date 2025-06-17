@@ -18,37 +18,14 @@ struct ClubAuthView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
                 Color.black
                     .ignoresSafeArea()
                 
                 VStack(spacing: 30) {
                     // Header
                     VStack(spacing: 16) {
-                        HStack {
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                Image(systemName: "chevron.left")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                            }
-                            
-                            Spacer()
-                            
-                            Text("Club Access")
-                                .font(.title)
-                                .fontWeight(.bold)
-                                .foregroundColor(.white)
-                            
-                            Spacer()
-                            
-                            Button(action: {}) {
-                                Image(systemName: "questionmark.circle")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                            }
-                        }
+                        
+                        header
                         
                         // Segmented Control
                         Picker("Auth Type", selection: $selectedTab) {
@@ -87,7 +64,40 @@ struct ClubAuthView: View {
     }
 }
 
+extension ClubAuthView {
+    
+    private var header : some View {
+       
+            HStack {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+                
+                Spacer()
+                
+                Text("Club Access")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                Button(action: {}) {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+            }
+    }
+    
+}
+
 struct LoginFormView: View {
+    
     @Binding var email: String
     @Binding var password: String
     @Binding var navigateToDashboard: Bool
@@ -167,6 +177,7 @@ struct LoginFormView: View {
 }
 
 struct SignupOptionView: View {
+    
     @Binding var navigateToSignup: Bool
     
     var body: some View {
@@ -239,7 +250,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     )
             )
-            .foregroundColor(.white)
+            .foregroundColor(Color.white)
     }
 }
 

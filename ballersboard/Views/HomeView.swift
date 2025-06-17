@@ -9,22 +9,27 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @State private var clubSearch: String = ""
-    @State private var clubs = Club.sampleClubs
-    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = AuthViewModel()
     
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.deepBlack
+                Color.softGray
                     .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    clubList
+                    List(viewModel.clubs) { club in
+                        HomeClubCardView(club: club)
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    }
                 }
-                .searchable(text: $clubSearch, prompt: "Search clubs or top ballers")
+                
             }
             .navigationTitle("Top clubs")
+            .onAppear{
+                viewModel.fetchClubs()
+            }
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 Image(systemName: "crown.fill")
@@ -34,89 +39,50 @@ struct HomeView: View {
         
     }
     
-//    private var filteredClubs: [Club] {
-//        if clubSearch.isEmpty {
-//            return clubs
-//        } else {
-//            return clubs.filter {
-//                $0.name.localizedCaseInsensitiveContains(clubSearch) ||
-//                $0.city.localizedCaseInsensitiveContains(clubSearch) ||
-//                $0.topBaller.alias.localizedCaseInsensitiveContains(clubSearch)
-//            }
-//        }
-    
-    private var filteredClubs: [Club] {
-        let result = clubSearch.isEmpty
-            ? clubs
-            : clubs.filter {
-                $0.name.localizedCaseInsensitiveContains(clubSearch) ||
-                $0.city.localizedCaseInsensitiveContains(clubSearch) ||
-                $0.topBaller.alias.localizedCaseInsensitiveContains(clubSearch)
-            }
-        
-        return result.sorted { $0.topBaller.amount > $1.topBaller.amount }
-    }
-
 }
 
-struct ClubCardView: View {
+private struct HomeClubCardView: View {
     
-    let club: Club
-    
+    let club: ClubModel
+
     var body: some View {
-        HStack(spacing: 16) {
-            // Club Logo
-            ZStack {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.purple, Color.pink]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 60, height: 60)
+        
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(club.clubName)
+                        .font(.system(.title3, design: .rounded).weight(.semibold))
+                        .foregroundColor(.white)
+                    Text(club.city)
+                        .font(.system(.subheadline, design: .rounded))
+                        .foregroundColor(.gray)
+                }
                 
-                Image(systemName: "building.2.fill")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            }
-            
-            // Club Info
-            VStack(alignment: .leading, spacing: 4) {
-                Text(club.name)
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
+                Spacer()
                 
-                Text(club.city)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-                HStack {
-                    Image(systemName: "crown.fill")
+                if let baller = club.topBaller {
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("Top Baller")
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                        
+                        Text("👑 \(baller.alias)")
+                            .font(.system(.subheadline, design: .rounded).bold())
+                            .foregroundColor(.yellow)
+                        
+                        Text("₦\(Int(baller.amount))")
+                            .font(.caption)
+                            .foregroundColor(.green)
+                    }
+                } else {
+                    Text("No baller yet")
                         .font(.caption)
-                        .foregroundColor(.yellow)
-                    
-                    Text("Top: \(club.topBaller.alias)")
-                        .font(.caption)
-                        .foregroundColor(.yellow)
-                    
-                    Text("$\(Int(club.topBaller.amount))")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.green)
+                        .foregroundColor(.gray)
                 }
             }
-            
-            Spacer()
-            
-            // Arrow
-            Image(systemName: "chevron.right")
-                .font(.title3)
-                .foregroundColor(.gray)
+            Divider().background(Color.white.opacity(0.1))
         }
-        .padding(20)
+        .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.gray.opacity(0.1))
@@ -125,53 +91,11 @@ struct ClubCardView: View {
                         .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                 )
         )
+
+
     }
 }
 
-extension HomeView{
-    private var homeViewHeader: some View {
-        HStack {
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "chevron.left")
-                    .font(.title2)
-                    .foregroundColor(.white)
-            }
-            
-            Spacer()
-            
-            Text("Top Clubs")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.softWhite)
-            
-            Spacer()
-            
-            Image(systemName: "crown.fill")
-                .font(.title)
-                .foregroundColor(.yellow)
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-    }
-    
-    private var clubList: some View{
-        ScrollView {
-            LazyVStack(spacing: 16) {
-                ForEach(filteredClubs) { club in
-                    NavigationLink(destination: ClubDetailView(club: club)) {
-                        ClubCardView(club: club)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 20)
-        }
-        
-    }
-}
 
 #Preview {
     NavigationStack{
