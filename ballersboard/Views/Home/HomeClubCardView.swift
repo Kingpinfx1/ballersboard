@@ -1,47 +1,13 @@
 //
-//  HomeView.swift
+//  HomeClubCardView.swift
 //  ballersboard
 //
-//  Created by kingpin on 6/14/25.
+//  Created by kingpin on 6/18/25.
 //
 
 import SwiftUI
 
-struct HomeView: View {
-    
-    @StateObject private var viewModel = AuthViewModel()
-    
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                Color.softGray
-                    .ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    List(viewModel.clubs) { club in
-                        HomeClubCardView(club: club)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                    }
-                }
-                
-            }
-            .navigationTitle("Top clubs")
-            .onAppear{
-                viewModel.fetchClubs()
-            }
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                Image(systemName: "crown.fill")
-            }
-            
-        }
-        
-    }
-    
-}
-
-private struct HomeClubCardView: View {
+struct HomeClubCardView: View {
     
     let club: ClubModel
 
@@ -80,7 +46,6 @@ private struct HomeClubCardView: View {
                         .foregroundColor(.gray)
                 }
             }
-            Divider().background(Color.white.opacity(0.1))
         }
         .padding()
         .background(
@@ -96,9 +61,6 @@ private struct HomeClubCardView: View {
     }
 }
 
-
 #Preview {
-    NavigationStack{
-        HomeView()
-    }
+    HomeClubCardView(club: ClubModel(clubName: "QUilox", city: "Lagos", address: "Lagos", socialLink: "instagram", phoneNumber: "0489274742", email: "test@gmail.com", clubLogo: "logourl"))
 }

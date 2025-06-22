@@ -19,6 +19,7 @@ struct ClubSignupView: View {
     @State private var clubLogo = false
     @State private var navigateToDashboard = false
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = AuthViewModel()
     
     
     var body: some View {
@@ -136,49 +137,62 @@ extension ClubSignupView {
                 .padding(.horizontal, 20)
             }
             
-            // Upload Section
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Uploads (Optional)")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                
-                VStack(spacing: 16) {
-                    // Logo Upload
-                    Button(action: {
-              
-                    }) {
-                        HStack {
-                            Image(systemName: "photo.fill")
-                                .font(.title2)
-                            Text("Upload Club Logo")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                        }
-                        .foregroundColor(.white)
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.gray.opacity(0.1))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                )
-                        )
-                    }
-                    .padding(.horizontal, 20)
-                    
-                  
-                }
-            }
+//            // Upload Section
+//            VStack(alignment: .leading, spacing: 16) {
+//                Text("Uploads (Optional)")
+//                    .font(.headline)
+//                    .foregroundColor(.white)
+//                    .padding(.horizontal, 20)
+//                
+//                VStack(spacing: 16) {
+//                    // Logo Upload
+//                    Button(action: {
+//              
+//                    }) {
+//                        HStack {
+//                            Image(systemName: "photo.fill")
+//                                .font(.title2)
+//                            Text("Upload Club Logo")
+//                                .font(.headline)
+//                                .fontWeight(.semibold)
+//                            Spacer()
+//                            Image(systemName: "plus.circle.fill")
+//                                .font(.title2)
+//                        }
+//                        .foregroundColor(.white)
+//                        .padding(16)
+//                        .background(
+//                            RoundedRectangle(cornerRadius: 12)
+//                                .fill(Color.gray.opacity(0.1))
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 12)
+//                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+//                                )
+//                        )
+//                    }
+//                    .padding(.horizontal, 20)
+//                    
+//                  
+//                }
+//            }
         }
     }
     
     private var submitButton : some View {
         Button(action: {
+            Task {
+                    let club = ClubModel(
+                        clubName: clubName,
+                        city: city,
+                        address: address,
+                        socialLink: socialLink,
+                        phoneNumber: phoneNumber,
+                        email: email,
+                        topBaller: nil
+                    )
+
+                    let success = await viewModel.signUpClub(email: email, password: password, club: club)
+                }
             // Haptic feedback
             let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
             impactFeedback.impactOccurred()

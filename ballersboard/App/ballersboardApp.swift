@@ -23,3 +23,10 @@ struct ballersboardApp: App {
         }
     }
 }
+
+#Preview {
+    NavigationStack{
+        OnboardingView()
+    }
+}
+

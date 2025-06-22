@@ -17,7 +17,7 @@ struct ClubModel: Identifiable, Codable {
     var socialLink: String
     var phoneNumber: String
     var email: String
-    var clubLogo: String
+    var clubLogo: String? = nil
     var topBaller: ClubBaller?
 }
 
