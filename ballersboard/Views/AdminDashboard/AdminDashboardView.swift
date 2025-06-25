@@ -183,22 +183,13 @@ struct AdminBallerRowView: View {
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                 
-                HStack {
-                    Image(systemName: "clock.fill")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                    
-                    Text("Crowned \(baller.crownedTime)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
             }
             
             Spacer()
             
             // Amount
             VStack(alignment: .trailing, spacing: 4) {
-                Text("$\(Int(baller.amount))")
+                Text("₦\(Int(baller.amount))")
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.green)
@@ -239,6 +230,7 @@ struct AdminBallerRowView: View {
 }
 
 struct AddBallerFormView: View {
+    
     @Binding var alias: String
     @Binding var amount: String
     @Binding var isVisible: Bool
