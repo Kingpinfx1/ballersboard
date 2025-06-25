@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AdminDashboardView: View {
-    @State private var ballers = Baller.sampleBallers
+    @State private var ballers = ClubBaller.sampleBallers
     @State private var newBallerAlias = ""
     @State private var newBallerAmount = ""
     @State private var showingAddForm = false
@@ -159,7 +159,7 @@ extension AdminDashboardView{
 }
 
 struct AdminBallerRowView: View {
-    let baller: Baller
+    let baller: ClubBaller
     let rank: Int
     
     var body: some View {
