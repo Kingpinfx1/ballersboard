@@ -18,6 +18,8 @@ struct ClubSignupView: View {
     @State private var confirmPassword = ""
     @State private var clubLogo = false
     @State private var navigateToDashboard = false
+    @State private var showValidationAlert = false
+    @State private var validationMessage = ""
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = AuthViewModel()
     
@@ -180,24 +182,38 @@ extension ClubSignupView {
     
     private var submitButton : some View {
         Button(action: {
+            // Form validation
+            if clubName.isEmpty || city.isEmpty || address.isEmpty || socialLink.isEmpty || phoneNumber.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty {
+                validationMessage = "Please fill in all fields."
+                showValidationAlert = true
+                return
+            }
+            if password != confirmPassword {
+                validationMessage = "Passwords do not match."
+                showValidationAlert = true
+                return
+            }
             Task {
-                    let club = ClubModel(
-                        clubName: clubName,
-                        city: city,
-                        address: address,
-                        socialLink: socialLink,
-                        phoneNumber: phoneNumber,
-                        email: email,
-                        topBaller: nil
-                    )
-
-                    let success = await viewModel.signUpClub(email: email, password: password, club: club)
+                let club = ClubModel(
+                    clubName: clubName,
+                    city: city,
+                    address: address,
+                    socialLink: socialLink,
+                    phoneNumber: phoneNumber,
+                    email: email,
+                    topBaller: nil
+                )
+                let success = await viewModel.signUpClub(email: email, password: password, club: club)
+                if success {
+                    // Haptic feedback
+                    let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                    impactFeedback.impactOccurred()
+                    navigateToDashboard = true
+                } else {
+                    validationMessage = viewModel.errorMessage ?? "Registration failed. Please try again."
+                    showValidationAlert = true
                 }
-            // Haptic feedback
-            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-            impactFeedback.impactOccurred()
-            
-            navigateToDashboard = true
+            }
         }) {
             HStack {
                 Image(systemName: "checkmark.circle.fill")
@@ -214,6 +230,9 @@ extension ClubSignupView {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 30)
+        .alert(isPresented: $showValidationAlert) {
+            Alert(title: Text("Registration Error"), message: Text(validationMessage), dismissButton: .default(Text("OK")))
+        }
     }
 }
 
