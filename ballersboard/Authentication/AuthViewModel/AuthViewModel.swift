@@ -1,8 +1,8 @@
 //
 //  AuthViewModel.swift
-//  ballersboard
+//  SwiftUIFirebase
 //
-//  Created by kingpin on 6/17/25.
+//  Created by kingpin on 5/31/25.
 //
 
 import Foundation
@@ -10,71 +10,193 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
+protocol AuthenticationFormProtocol {
+    var formIsValid: Bool {get}
+}
+
+enum AuthError: LocalizedError {
+    case invalidEmail
+    case weakPassword
+    case emailAlreadyInUse
+    case userNotFound
+    case wrongPassword
+    case networkError
+    case passwordResetFailed
+    case unknown(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidEmail:
+            return "Please enter a valid email address"
+        case .weakPassword:
+            return "Password should be at least 6 characters long"
+        case .emailAlreadyInUse:
+            return "This email is already registered"
+        case .userNotFound:
+            return "No account found with this email"
+        case .wrongPassword:
+            return "Incorrect password"
+        case .networkError:
+            return "Network error. Please check your connection"
+        case .passwordResetFailed:
+            return "Failed to send password reset email. Please try again"
+        case .unknown(let message):
+            return message
+        }
+    }
+}
 
 @MainActor
 class AuthViewModel: ObservableObject {
     
-    @Published var clubs: [ClubModel] = []
-    @Published var errorMessage: String?
-    private var db = Firestore.firestore()
+    @Published var userSession: FirebaseAuth.User?
+    @Published var currentUser: User?
+    
+    @Published var showAlert: Bool = false
+    @Published var alertMessage: String = ""
+    @Published var isLoading: Bool = false
+    @Published var showSuccessAlert: Bool = false
+    @Published var successMessage: String = ""
+    
+   
     
     
-    // MARK: FETCH CLUBS
-    
-    func fetchClubs() async {
-        do {
-            var fetchedClubs: [ClubModel] = []
-            
-            let snapshot = try await db.collection("clubs").getDocuments()
-            
-            for document in snapshot.documents {
-                if var club = try? document.data(as: ClubModel.self),
-                   let clubId = club.id {
-                    
-                    let ballerSnapshot = try await db.collection("clubs")
-                        .document(clubId)
-                        .collection("ballers")
-                        .order(by: "amount", descending: true)
-                        .limit(to: 1)
-                        .getDocuments()
-
-                    if let topDoc = ballerSnapshot.documents.first {
-                        club.topBaller = try? topDoc.data(as: ClubBaller.self)
-                    }
-                    
-                    fetchedClubs.append(club)
-                }
-            }
-
-            // ✅ Sort by top baller amount (descending). Clubs with no top baller go to the bottom.
-            self.clubs = fetchedClubs.sorted {
-                let amount1 = $0.topBaller?.amount ?? 0
-                let amount2 = $1.topBaller?.amount ?? 0
-                return amount1 > amount2
-            }
-
-        } catch {
-            print("❌ Error fetching clubs: \(error.localizedDescription)")
+    init(){
+        self.userSession = Auth.auth().currentUser
+        
+        Task{
+            await fetchUser()
         }
     }
-
-    // MARK: SIGNUP CLUBS
-    func signUpClub(email: String, password: String, club: ClubModel) async -> Bool {
+    
+    func fetchClubs(){
+        
+    }
+    
+    func signIn(withEmail email: String , password : String ) async {
+        isLoading = true
         do {
-            // Step 1: Sign up with Firebase Auth
-            let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
-            let userID = authResult.user.uid
-
-            // Step 2: Save club to Firestore
-            var newClub = club
-            newClub.id = userID // use UID as document ID
-            try db.collection("clubs").document(userID).setData(from: newClub)
-
-            return true
-        } catch {
-            self.errorMessage = error.localizedDescription
-            return false
+            let result = try await Auth.auth().signIn(withEmail: email, password: password)
+            self.userSession = result.user
+            await fetchUser()
+        } catch let error as NSError {
+            handleAuthError(error)
+        }
+        isLoading = false
+    }
+    
+    
+    
+    
+    func createUser(withEmail email: String , password : String , clubName :String, city: String, address: String, socialLink: String,phoneNumber:String) async {
+        isLoading = true
+        do {
+            let result = try await Auth.auth().createUser(withEmail: email, password: password)
+            self.userSession = result.user
+            let user = User(id: result.user.uid, clubName: clubName, city: city, address: address, socialLink: socialLink, phoneNumber: phoneNumber, email: email)
+            let encodedUser = try Firestore.Encoder().encode(user)
+            try await Firestore.firestore().collection("users").document(user.id).setData(encodedUser)
+            await fetchUser()
+        } catch let error as NSError {
+            handleAuthError(error)
+        }
+        isLoading = false
+    }
+    
+    func signOut(){
+        do {
+            try Auth.auth().signOut()
+            self.userSession = nil
+            self.currentUser = nil
+        } catch let error as NSError {
+            alertMessage = error.localizedDescription
+            showAlert = true
         }
     }
-
+    
+    func deleteAccount() async {
+        guard let user = Auth.auth().currentUser else { return }
+        isLoading = true
+        
+        do {
+            try await Firestore.firestore().collection("users").document(user.uid).delete()
+            
+            try await user.delete()
+            
+            self.userSession = nil
+            self.currentUser = nil
+        } catch let error as NSError {
+            handleAuthError(error)
+        }
+        
+        isLoading = false
+    }
+    
+    
+    func resetPassword(withEmail email: String) async {
+        isLoading = true
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+            successMessage = "Password reset email sent. Please check your inbox"
+            showSuccessAlert = true
+        } catch let error as NSError {
+            handleAuthError(error)
+        }
+        isLoading = false
+    }
+    
+    private func handleAuthError(_ error: NSError) {
+        let authError: AuthError
+        
+        switch error.code {
+        case AuthErrorCode.invalidEmail.rawValue:
+            authError = .invalidEmail
+        case AuthErrorCode.weakPassword.rawValue:
+            authError = .weakPassword
+        case AuthErrorCode.emailAlreadyInUse.rawValue:
+            authError = .emailAlreadyInUse
+        case AuthErrorCode.userNotFound.rawValue:
+            authError = .userNotFound
+        case AuthErrorCode.wrongPassword.rawValue:
+            authError = .wrongPassword
+        case AuthErrorCode.networkError.rawValue:
+            authError = .networkError
+        case AuthErrorCode.invalidActionCode.rawValue:
+            authError = .passwordResetFailed
+        default:
+            authError = .unknown(error.localizedDescription)
+        }
+        
+        alertMessage = authError.localizedDescription
+        showAlert = true
+    }
+    
+    func fetchUser() async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        do {
+            let snapshot = try await Firestore.firestore().collection("users").document(uid).getDocument()
+            self.currentUser = try snapshot.data(as: User.self)
+        } catch {
+            alertMessage = "Failed to fetch user data"
+            showAlert = true
+        }
+    }
+    
+    
+    func reloadUser() async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        do {
+            let snapshot = try await Firestore.firestore().collection("users").document(uid).getDocument()
+            if let data = snapshot.data() {
+                let user = try Firestore.Decoder().decode(User.self, from: data)
+                self.currentUser = user
+            }
+        } catch {
+            print("Failed to reload user: \(error.localizedDescription)")
+        }
+    }
+    
+    
 }
+

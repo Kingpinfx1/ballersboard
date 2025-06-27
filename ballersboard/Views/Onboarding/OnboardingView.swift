@@ -13,6 +13,7 @@ struct OnboardingView: View {
     @State private var animateLogo = false
     @State private var animateText = false
     @State private var animateButtons = false
+    @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
         NavigationStack {
@@ -50,6 +51,7 @@ struct OnboardingView: View {
         }
         .navigationDestination(isPresented: $navigateToClubAuth) {
             ClubAuthView()
+                .environmentObject(viewModel)
         }
     }
 }
@@ -242,5 +244,5 @@ extension OnboardingView{
 }
 
 #Preview {
-    OnboardingView()
-} 
+      OnboardingView()
+}

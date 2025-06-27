@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeClubCardView: View {
     
-    let club: ClubModel
+    let club: User
 
     var body: some View {
         
@@ -61,6 +61,6 @@ struct HomeClubCardView: View {
     }
 }
 
-#Preview {
-    HomeClubCardView(club: ClubModel(clubName: "QUilox", city: "Lagos", address: "Lagos", socialLink: "instagram", phoneNumber: "0489274742", email: "test@gmail.com", clubLogo: "logourl"))
-}
+//#Preview {
+//    HomeClubCardView(club: User(id: 1, clubName: "QUilox", city: "Lagos", address: "Lagos", socialLink: "instagram", phoneNumber: "0489274742", email: "test@gmail.com", clubLogo: "logourl"))
+//}

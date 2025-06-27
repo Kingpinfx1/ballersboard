@@ -17,18 +17,18 @@ struct HomeView: View {
                 Color.softGray
                     .ignoresSafeArea()
                 
-                VStack(spacing: 0) {
-                    List(viewModel.clubs) { club in
-                        HomeClubCardView(club: club)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                    }
-                }
+//                VStack(spacing: 0) {
+//                    List(viewModel.clubs) { club in
+//                        HomeClubCardView(club: club)
+//                            .listRowBackground(Color.clear)
+//                            .listRowSeparator(.hidden)
+//                    }
+//                }
                 
             }
             .navigationTitle("Top clubs")
             .task{
-                await viewModel.fetchClubs()
+                 viewModel.fetchClubs()
             }
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

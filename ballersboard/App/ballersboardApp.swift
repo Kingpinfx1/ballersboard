@@ -11,22 +11,20 @@ import Firebase
 @main
 struct ballersboardApp: App {
     
+    @StateObject  var viewModel = AuthViewModel()
+    
     init() {
-            FirebaseApp.configure()
-        }
+        FirebaseApp.configure()
+    }
     
     var body: some Scene {
         WindowGroup {
             NavigationStack{
                 OnboardingView()
+                    .environmentObject(viewModel)
             }
         }
     }
 }
 
-#Preview {
-    NavigationStack{
-        OnboardingView()
-    }
-}
 

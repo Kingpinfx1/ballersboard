@@ -7,30 +7,28 @@
 
 
 import Foundation
-import FirebaseFirestore
 
-struct ClubModel: Identifiable, Codable {
-    @DocumentID var id: String?
+struct User: Identifiable, Codable {
+    let id: String
     var clubName: String
     var city: String
     var address: String
     var socialLink: String
     var phoneNumber: String
     var email: String
-    var clubLogo: String? = nil
     var topBaller: ClubBaller?
 }
 
 struct ClubBaller: Identifiable, Codable {
-    @DocumentID var id: String?
+    let id: String
     var alias: String
     var amount: Double
 }
 
 
-extension ClubModel {
-    static let sampleClubs: [ClubModel] = [
-        ClubModel(
+extension User {
+    static let sampleClubs: [User] = [
+        User(
             id: "club1",
             clubName: "Club Velvet",
             city: "Miami",
@@ -38,10 +36,9 @@ extension ClubModel {
             socialLink: "https://instagram.com/clubvelvet",
             phoneNumber: "+1 305-123-4567",
             email: "info@clubvelvet.com",
-            clubLogo: "club1",
             topBaller: ClubBaller(id: "baller1", alias: "KingPin", amount: 5000)
         ),
-        ClubModel(
+        User(
             id: "club2",
             clubName: "The Vault",
             city: "Los Angeles",
@@ -49,10 +46,9 @@ extension ClubModel {
             socialLink: "https://instagram.com/thevaultla",
             phoneNumber: "+1 213-987-6543",
             email: "contact@thevaultla.com",
-            clubLogo: "club2",
             topBaller: ClubBaller(id: "baller2", alias: "BigSpender", amount: 18000)
         ),
-        ClubModel(
+        User(
             id: "club3",
             clubName: "Sky Lounge",
             city: "New York City",
@@ -60,10 +56,9 @@ extension ClubModel {
             socialLink: "https://instagram.com/skyloungeny",
             phoneNumber: "+1 212-555-7890",
             email: "sky@lounge.com",
-            clubLogo: "club3",
             topBaller: ClubBaller(id: "baller3", alias: "NightOwl", amount: 32000)
         ),
-        ClubModel(
+        User(
             id: "club4",
             clubName: "Platinum",
             city: "Las Vegas",
@@ -71,10 +66,9 @@ extension ClubModel {
             socialLink: "https://instagram.com/platinumvegas",
             phoneNumber: "+1 702-222-8888",
             email: "platinum@vegasclub.com",
-            clubLogo: "club4",
             topBaller: ClubBaller(id: "baller4", alias: "HighRoller", amount: 45000)
         ),
-        ClubModel(
+        User(
             id: "club5",
             clubName: "The Basement",
             city: "Chicago",
@@ -82,7 +76,6 @@ extension ClubModel {
             socialLink: "https://instagram.com/thebasementchi",
             phoneNumber: "+1 773-123-9876",
             email: "basement@chicago.com",
-            clubLogo: "club5",
             topBaller: ClubBaller(id: "baller5", alias: "WindyCity", amount: 12000)
         )
     ]
