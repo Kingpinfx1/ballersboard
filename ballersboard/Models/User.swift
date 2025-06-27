@@ -17,6 +17,7 @@ struct User: Identifiable, Codable {
     var phoneNumber: String
     var email: String
     var topBaller: ClubBaller?
+    var ballers: [ClubBaller]?
 }
 
 struct ClubBaller: Identifiable, Codable {

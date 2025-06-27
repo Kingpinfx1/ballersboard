@@ -58,6 +58,7 @@ class AuthViewModel: ObservableObject {
     @Published var showSuccessAlert: Bool = false
     @Published var successMessage: String = ""
     
+    
    
     
     
@@ -198,5 +199,36 @@ class AuthViewModel: ObservableObject {
     }
     
     
+    func fetchBallers() async -> [ClubBaller] {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return []
+        }
+        do {
+            let snapshot = try await Firestore.firestore()
+                .collection("users")
+                .document(uid)
+                .collection("ballers")
+                .getDocuments()
+            
+          
+            let ballers = snapshot.documents.compactMap { document in
+                do {
+                    let baller = try document.data(as: ClubBaller.self)
+                    print("Decoded baller: \(baller)")
+                    return baller
+                } catch {
+                    print("Failed to decode document \(document.documentID): \(error)")
+                    return nil
+                }
+            }
+            
+            return ballers
+        } catch {
+            
+            alertMessage = "Failed to fetch ballers: \(error.localizedDescription)"
+            showAlert = true
+            return []
+        }
+    }
 }
 
