@@ -70,8 +70,55 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchClubs(){
-        
+    func fetchClubs() async -> [(user: User, topBallerAmount: Double?)] {
+        do {
+            let userSnapshot = try await Firestore.firestore()
+                .collection("users")
+                .getDocuments()
+            
+            print("Fetched \(userSnapshot.documents.count) user documents")
+            
+            var userWithTopBaller: [(user: User, topBallerAmount: Double?)] = []
+            
+            for document in userSnapshot.documents {
+                do {
+                    let user = try document.data(as: User.self)
+                    // Fetch the top baller for this user
+                    let ballerSnapshot = try await Firestore.firestore()
+                        .collection("users")
+                        .document(user.id)
+                        .collection("ballers")
+                        .order(by: "amount", descending: true)
+                        .limit(to: 1)
+                        .getDocuments()
+                    
+                    let topBaller = ballerSnapshot.documents.compactMap { doc in
+                        try? doc.data(as: ClubBaller.self)
+                    }.first
+                    
+                    let topAmount = topBaller?.amount
+                    userWithTopBaller.append((user: user, topBallerAmount: topAmount))
+                    print("User \(user.clubName) top baller amount: \(topAmount?.description ?? "none")")
+                } catch {
+                    print("Failed to decode user \(document.documentID): \(error)")
+                }
+            }
+            
+            // Sort users by top baller amount (nil amounts go to the bottom)
+            let sortedUsers = userWithTopBaller.sorted { (user1, user2) in
+                let amount1 = user1.topBallerAmount ?? -Double.infinity
+                let amount2 = user2.topBallerAmount ?? -Double.infinity
+                return amount1 > amount2
+            }
+            
+            print("Returning \(sortedUsers.count) users")
+            return sortedUsers
+        } catch {
+            print("Error fetching users: \(error)")
+            alertMessage = "Failed to fetch clubs: \(error.localizedDescription)"
+            showAlert = true
+            return []
+        }
     }
     
     func signIn(withEmail email: String , password : String ) async {

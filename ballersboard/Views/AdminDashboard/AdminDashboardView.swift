@@ -204,7 +204,6 @@ struct AdminDashboardView: View {
                 }
             }
             .sheet(isPresented: $showAddBallersSheet) {
-                            // Sheet content
                 AddBallersView()
                         }
         }
