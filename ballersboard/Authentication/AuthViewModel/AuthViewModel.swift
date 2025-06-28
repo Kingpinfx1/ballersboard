@@ -303,5 +303,36 @@ class AuthViewModel: ObservableObject {
             showAlert = true
         }
     }
+    
+    func fetchBallersForUser(userId: String) async -> [ClubBaller] {
+        do {
+            let snapshot = try await Firestore.firestore()
+                .collection("users")
+                .document(userId)
+                .collection("ballers")
+                .order(by: "amount", descending: true)
+                .limit(to: 20)
+                .getDocuments()
+            
+            print("Fetched \(snapshot.documents.count) baller documents for user \(userId)")
+            let ballers = snapshot.documents.compactMap { document in
+                do {
+                    let baller = try document.data(as: ClubBaller.self)
+                    print("Decoded baller: \(baller)")
+                    return baller
+                } catch {
+                    print("Failed to decode document \(document.documentID): \(error)")
+                    return nil
+                }
+            }
+            print("Returning \(ballers.count) ballers")
+            return ballers
+        } catch {
+            print("Error fetching ballers for user \(userId): \(error)")
+            alertMessage = "Failed to fetch ballers: \(error.localizedDescription)"
+            showAlert = true
+            return []
+        }
+    }
 }
 

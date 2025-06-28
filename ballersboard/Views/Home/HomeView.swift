@@ -47,46 +47,49 @@ struct HomeView: View {
                                 .frame(maxWidth: .infinity, alignment: .center)
                         } else {
                             ForEach(Array(clubs.enumerated()), id: \.element.user.id) { index, club in
-                                HStack(alignment: .center, spacing: 12) {
-                                    // Rank Indicator in Crown Area
-                                    ZStack {
-                                        Image(systemName: "crown.fill")
-                                            .resizable()
-                                            .frame(width: 40, height: 30)
-                                            .foregroundColor(.yellow)
-                                        Text("\(index + 1)")
-                                            .font(.caption)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.black)
-                                            .padding(4)
-                                            .background(Circle().fill(Color.white.opacity(0.8)))
-                                            .offset(x: 10, y: -10)
-                                    }
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(club.user.clubName)
-                                            .font(.headline)
-                                            .foregroundColor(.primary)
-                                        Text(club.user.email)
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                        if let amount = club.topBallerAmount,
-                                           let formattedAmount = nairaFormatter.string(from: NSNumber(value: amount)) {
-                                            Text("Top Baller: \(formattedAmount)")
+                                NavigationLink(destination: ClubBallersView(club: club.user)
+                                    .environmentObject(viewModel)) {
+                                    HStack(alignment: .center, spacing: 12) {
+                                        // Rank Indicator in Crown Area
+                                        ZStack {
+                                            Image(systemName: "crown.fill")
+                                                .resizable()
+                                                .frame(width: 40, height: 30)
+                                                .foregroundColor(.yellow)
+                                            Text("\(index + 1)")
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.black)
+                                                .padding(4)
+                                                .background(Circle().fill(Color.white.opacity(0.8)))
+                                                .offset(x: 10, y: -10)
+                                        }
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(club.user.clubName)
+                                                .font(.headline)
+                                                .foregroundColor(.primary)
+                                            Text(club.user.email)
                                                 .font(.subheadline)
                                                 .foregroundColor(.secondary)
-                                        } else {
-                                            Text("No top baller")
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
+                                            if let amount = club.topBallerAmount,
+                                               let formattedAmount = nairaFormatter.string(from: NSNumber(value: amount)) {
+                                                Text("Top Baller: \(formattedAmount)")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.secondary)
+                                            } else {
+                                                Text("No top baller")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.gray)
+                                            }
                                         }
+                                        Spacer()
                                     }
-                                    Spacer()
+                                    .padding()
+                                    .background(Color(.systemBackground))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .shadow(radius: 2)
+                                    .padding(.vertical, 4)
                                 }
-                                .padding()
-                                .background(Color(.systemBackground))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .shadow(radius: 2)
-                                .padding(.vertical, 4)
                             }
                         }
                     }
