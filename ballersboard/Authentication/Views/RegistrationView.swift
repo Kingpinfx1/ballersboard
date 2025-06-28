@@ -1,9 +1,5 @@
-//
-//  RegistrationView.swift
-//  SwiftUIFirebase
-//
-//  Created by kingpin on 5/30/25.
-//
+
+
 
 import SwiftUI
 
@@ -25,13 +21,13 @@ struct RegistrationView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView {
+           
                 ZStack{
                     Color.black
                     
                     RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
                         .fill(
-                            LinearGradient(colors: [Color.pink, Color.red], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            LinearGradient(colors: [Color.blue, Color.purple], startPoint: .topLeading, endPoint: .bottomTrailing)
                         )
                         .frame(width: 1000, height: 400)
                         .rotationEffect(.degrees(135))
@@ -39,13 +35,12 @@ struct RegistrationView: View {
                     
                     
                     VStack(spacing: 20) {
-                        Spacer()
                         
                         Text("Create Account")
                             .foregroundStyle(Color.white)
                             .font(.largeTitle)
                             .fontWeight(.bold)
-                            .offset(x: -50)
+                            .offset(x: -50, y: -10)
                         
                         TextField("Email", text: $email)
                             .foregroundStyle(Color.white)
@@ -203,7 +198,7 @@ struct RegistrationView: View {
                             RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
                                 .fill(
                                     LinearGradient(
-                                        colors: [Color.pink, Color.red],
+                                        colors: [Color.blue, Color.purple],
                                         startPoint: .top,
                                         endPoint: .bottomTrailing
                                     )
@@ -212,7 +207,7 @@ struct RegistrationView: View {
                         .disabled(!formIsValid || viewModel.isLoading)
                         .opacity((formIsValid && !viewModel.isLoading) ? 1.0 : 0.5)
                         .padding(.top)
-                        .offset(y: 100)
+                        .offset(y: 70)
                         
                         Button {
                             dismiss()
@@ -225,7 +220,7 @@ struct RegistrationView: View {
                             .foregroundStyle(.white)
                         }
                         .disabled(viewModel.isLoading)
-                        .offset(y: 110)
+                        .offset(y: 80)
                     }
                     .frame(width: 350)
                 }
@@ -235,7 +230,7 @@ struct RegistrationView: View {
                 } message: {
                     Text(viewModel.alertMessage)
                 }
-            }
+            
         }
     }
 }

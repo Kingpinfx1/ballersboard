@@ -1,9 +1,6 @@
-//
-//  LoginView.swift
-//  SwiftUIFirebase
-//
-//  Created by kingpin on 5/30/25.
-//
+
+
+
 
 import SwiftUI
 
@@ -21,7 +18,7 @@ struct LoginView: View {
                 
                 RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
                     .fill(
-                        LinearGradient(colors: [Color.pink, Color.red], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        LinearGradient(colors: [Color.blue, Color.purple], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                     .frame(width: 1000, height: 400)
                     .rotationEffect(.degrees(135))
@@ -95,7 +92,7 @@ struct LoginView: View {
                         RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
                             .fill(
                                 LinearGradient(
-                                    colors: [Color.pink, Color.red],
+                                    colors: [Color.blue, Color.purple],
                                     startPoint: .top,
                                     endPoint: .bottomTrailing
                                 )
