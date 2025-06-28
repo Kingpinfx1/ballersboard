@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 struct AdminDashboardView: View {
@@ -76,12 +75,22 @@ struct AdminDashboardView: View {
                                     .padding()
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
-                                ForEach(ballers) { baller in
-                                    HStack {
-                                        Image(systemName: "star.circle.fill")
-                                            .resizable()
-                                            .frame(width: 40, height: 40)
-                                            .foregroundColor(.yellow)
+                                ForEach(Array(ballers.enumerated()), id: \.element.id) { index, baller in
+                                    HStack(alignment: .center, spacing: 12) {
+                                        // Rank Indicator in Star Area
+                                        ZStack {
+                                            Image(systemName: "star.circle.fill")
+                                                .resizable()
+                                                .frame(width: 40, height: 40)
+                                                .foregroundColor(.yellow)
+                                            Text("\(index + 1)")
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.black)
+                                                .padding(4)
+                                                .background(Circle().fill(Color.white.opacity(0.8)))
+                                                .offset(x: 10, y: -10)
+                                        }
                                         VStack(alignment: .leading, spacing: 4) {
                                             Text(baller.alias)
                                                 .font(.headline)
@@ -154,6 +163,7 @@ struct AdminDashboardView: View {
                     }
                     .task {
                         ballers = await viewModel.fetchBallers()
+                        print("Task fetched \(ballers.count) ballers")
                     }
                 }
 
@@ -189,7 +199,6 @@ struct AdminDashboardView: View {
     AdminDashboardView()
         .environmentObject(AuthViewModel())
 }
-
 
 
 

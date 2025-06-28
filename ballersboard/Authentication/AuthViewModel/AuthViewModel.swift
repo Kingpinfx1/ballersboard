@@ -201,6 +201,7 @@ class AuthViewModel: ObservableObject {
     
     func fetchBallers() async -> [ClubBaller] {
         guard let uid = Auth.auth().currentUser?.uid else {
+            print("No user ID found")
             return []
         }
         do {
@@ -208,9 +209,11 @@ class AuthViewModel: ObservableObject {
                 .collection("users")
                 .document(uid)
                 .collection("ballers")
+                .order(by: "amount", descending: true)
+                .limit(to: 20)
                 .getDocuments()
             
-          
+            print("Fetched \(snapshot.documents.count) baller documents")
             let ballers = snapshot.documents.compactMap { document in
                 do {
                     let baller = try document.data(as: ClubBaller.self)
@@ -221,10 +224,10 @@ class AuthViewModel: ObservableObject {
                     return nil
                 }
             }
-            
+            print("Returning \(ballers.count) ballers")
             return ballers
         } catch {
-            
+            print("Error fetching ballers: \(error)")
             alertMessage = "Failed to fetch ballers: \(error.localizedDescription)"
             showAlert = true
             return []
