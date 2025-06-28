@@ -4,6 +4,7 @@ struct AdminDashboardView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State private var showDeleteConfirmation = false
     @State private var ballers: [ClubBaller] = []
+    @State private var showAddBallersSheet = false
 
     // NumberFormatter for Naira
     private let nairaFormatter: NumberFormatter = {
@@ -19,7 +20,7 @@ struct AdminDashboardView: View {
         NavigationView {
             ZStack {
                 Color(.systemGray6).ignoresSafeArea() // Light background for contrast
-
+                
                 if let user = viewModel.currentUser {
                     List {
                         // User Profile Section
@@ -49,15 +50,15 @@ struct AdminDashboardView: View {
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                         }
-
+                        
                         // Ballers Section
                         Section(header:
-                            HStack {
-                                Text("Club Ballers")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                Spacer()
-                            }
+                                    HStack {
+                            Text("Club Ballers")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
                             .padding()
                             .background(
                                 LinearGradient(
@@ -66,7 +67,7 @@ struct AdminDashboardView: View {
                                     endPoint: .trailing
                                 )
                             )
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
                         ) {
                             if ballers.isEmpty {
                                 Text("No ballers found")
@@ -117,7 +118,7 @@ struct AdminDashboardView: View {
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
-
+                        
                         // Account Actions Section
                         Section(header: Text("Account").font(.headline)) {
                             Button {
@@ -136,7 +137,7 @@ struct AdminDashboardView: View {
                                 .shadow(radius: 2)
                             }
                             .disabled(viewModel.isLoading)
-
+                            
                             Button {
                                 showDeleteConfirmation = true
                             } label: {
@@ -166,7 +167,7 @@ struct AdminDashboardView: View {
                         print("Task fetched \(ballers.count) ballers")
                     }
                 }
-
+                
                 if viewModel.isLoading {
                     Color.black.opacity(0.4)
                         .ignoresSafeArea()
@@ -191,6 +192,21 @@ struct AdminDashboardView: View {
             } message: {
                 Text(viewModel.alertMessage)
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        showAddBallersSheet = true
+                    }) {
+                        Image(systemName: "person.badge.plus")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
+            .sheet(isPresented: $showAddBallersSheet) {
+                            // Sheet content
+                AddBallersView()
+                        }
         }
     }
 }

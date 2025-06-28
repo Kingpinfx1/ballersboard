@@ -233,5 +233,28 @@ class AuthViewModel: ObservableObject {
             return []
         }
     }
+    
+    func addBaller(alias: String, amount: Double) async {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("No user ID found")
+            return
+        }
+        let ballerId = UUID().uuidString
+        let baller = ClubBaller(id: ballerId, alias: alias, amount: amount)
+        do {
+            let encodedBaller = try Firestore.Encoder().encode(baller)
+            try await Firestore.firestore()
+                .collection("users")
+                .document(uid)
+                .collection("ballers")
+                .document(ballerId)
+                .setData(encodedBaller)
+            print("Added baller with ID: \(ballerId)")
+        } catch {
+            print("Failed to add baller: \(error)")
+            alertMessage = "Failed to add baller: \(error.localizedDescription)"
+            showAlert = true
+        }
+    }
 }
 
